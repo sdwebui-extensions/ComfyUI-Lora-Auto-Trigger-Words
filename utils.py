@@ -45,16 +45,19 @@ def copy_preview_to_temp(file_name):
     return preview_path, base_name
 
 # add previews in selectors
+lora_image = {}
 def populate_items(names, type):
     for idx, item_name in enumerate(names):
+        if item_name not in lora_image:
 
-        has_image, item_image = get_preview_path(item_name, type)
+            has_image, item_image = get_preview_path(item_name, type)
+            lora_image[item_name] = {
+                "content": item_name,
+                "image": f"{type}/{item_image}" if has_image else None,
+                "type": "loras",
+            }
 
-        names[idx] = {
-            "content": item_name,
-            "image": f"{type}/{item_image}" if has_image else None,
-            "type": "loras",
-        }
+        names[idx] = lora_image[item_name]
     names.sort(key=lambda i: i["content"].lower())
 
 
