@@ -50,7 +50,8 @@ def populate_items(names, type):
     for idx, item_name in enumerate(names):
         if item_name not in lora_image:
 
-            has_image, item_image = get_preview_path(item_name, type)
+            # has_image, item_image = get_preview_path(item_name, type)
+            has_image = False
             lora_image[item_name] = {
                 "content": item_name,
                 "image": f"{type}/{item_image}" if has_image else None,
