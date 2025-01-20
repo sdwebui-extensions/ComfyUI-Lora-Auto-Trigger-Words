@@ -15,11 +15,14 @@ def get_preview_path(name, type):
     
     file_path_no_ext = os.path.splitext(file_path)[0]
     item_image=None
-    for ext in ["png", "jpg", "jpeg", "preview.png"]:
-        has_image = os.path.isfile(file_path_no_ext + "." + ext)
-        if has_image:
-            item_image = f"{file_name}.{ext}"
+    for ext in ["png", "jpg", "jpeg", "gif"]:
+        if item_image is not None:
             break
+        for ext2 in ["", ".preview"]:
+            has_image = os.path.isfile(file_path_no_ext + ext2 + "." + ext)
+            if has_image:
+                item_image = f"{file_name}{ext2}.{ext}"
+                break
         
     return has_image, item_image
 
@@ -85,8 +88,11 @@ def save_dict_to_json(data_dict, file_path):
 
 def get_model_version_info(hash_value):
     api_url = f"https://civitai.com/api/v1/model-versions/by-hash/{hash_value}"
-    response = requests.get(api_url)
-    
+    try:
+        response = requests.get(api_url)
+    except Exception as e:
+        print(f"[Lora-Auto-Trigger] {e}")
+        return None
     if response.status_code == 200:
         return response.json()
     else:
